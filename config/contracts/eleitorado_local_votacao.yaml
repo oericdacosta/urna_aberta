@@ -1,0 +1,108 @@
+contract_version: 1
+family: eleitorado_local_votacao
+ckan_dataset: eleitorado-2026
+zip:
+- https://cdn.tse.jus.br/estatistica/sead/odsele/eleitorado_locais_votacao/eleitorado_local_votacao_2026.zip
+member_pattern: eleitorado_local_votacao_2026_{UF}.csv
+format:
+  encoding: iso-8859-1
+  bom: false
+  delimiter: ;
+  quotechar: '"'
+  quoting: header e colunas de texto entre aspas; colunas numericas sem aspas
+  line_terminator: CRLF
+columns:
+- name: DT_GERACAO
+  type: date_dmy
+- name: HH_GERACAO
+  type: time
+- name: AA_ELEICAO
+  type: int
+- name: DT_ELEICAO
+  type: date_dmy
+- name: DS_ELEICAO
+  type: str
+- name: NR_TURNO
+  type: int
+- name: SG_UF
+  type: str
+- name: CD_MUNICIPIO
+  type: str
+  zero_padded: true
+- name: NM_MUNICIPIO
+  type: str
+- name: NR_ZONA
+  type: int
+- name: NR_SECAO
+  type: int
+- name: CD_TIPO_SECAO_AGREGADA
+  type: int
+- name: DS_TIPO_SECAO_AGREGADA
+  type: str
+- name: NR_SECAO_PRINCIPAL
+  type: int
+  special:
+  - '-1'
+- name: NR_LOCAL_VOTACAO
+  type: int
+- name: NM_LOCAL_VOTACAO
+  type: str
+- name: CD_TIPO_LOCAL
+  type: int
+- name: DS_TIPO_LOCAL
+  type: str
+- name: DS_ENDERECO
+  type: str
+- name: NM_BAIRRO
+  type: str
+- name: NR_CEP
+  type: str
+  zero_padded: true
+- name: NR_TELEFONE_LOCAL
+  type: str
+  special:
+  - '-1'
+- name: NR_LATITUDE
+  type: str
+  special:
+  - '-1'
+- name: NR_LONGITUDE
+  type: decimal_comma
+  special:
+  - '-1'
+- name: CD_SITU_LOCAL_VOTACAO
+  type: int
+- name: DS_SITU_LOCAL_VOTACAO
+  type: str
+- name: CD_SITU_ZONA
+  type: int
+  special:
+  - '-1'
+- name: DS_SITU_ZONA
+  type: str
+- name: CD_SITU_SECAO
+  type: int
+- name: DS_SITU_SECAO
+  type: str
+- name: CD_SITU_LOCALIDADE
+  type: int
+- name: DS_SITU_LOCALIDADE
+  type: str
+- name: CD_SITU_SECAO_ACESSIBILIDADE
+  type: int
+- name: DS_SITU_SECAO_ACESSIBILIDADE
+  type: str
+- name: QT_ELEITOR_SECAO
+  type: int
+- name: QT_ELEITOR_ELEICAO_FEDERAL
+  type: int
+- name: QT_ELEITOR_ELEICAO_ESTADUAL
+  type: int
+- name: QT_ELEITOR_ELEICAO_MUNICIPAL
+  type: int
+- name: NR_LOCAL_VOTACAO_ORIGINAL
+  type: int
+- name: NM_LOCAL_VOTACAO_ORIGINAL
+  type: str
+- name: DS_ENDERECO_LOCVT_ORIGINAL
+  type: str

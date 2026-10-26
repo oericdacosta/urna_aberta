@@ -1,0 +1,140 @@
+contract_version: 1
+family: votacao_candidato_munzona
+ckan_dataset: resultados-2026
+zip:
+- https://cdn.tse.jus.br/estatistica/sead/odsele/votacao_candidato_munzona/votacao_candidato_munzona_2026.zip
+member_pattern: votacao_candidato_munzona_2026_{UF}.csv
+format:
+  encoding: iso-8859-1
+  bom: false
+  delimiter: ;
+  quotechar: '"'
+  quoting: header e colunas de texto entre aspas; colunas numericas sem aspas
+  line_terminator: CRLF
+columns:
+- name: DT_GERACAO
+  type: date_dmy
+- name: HH_GERACAO
+  type: time
+- name: ANO_ELEICAO
+  type: int
+- name: CD_TIPO_ELEICAO
+  type: int
+- name: NM_TIPO_ELEICAO
+  type: str
+- name: NR_TURNO
+  type: int
+- name: CD_ELEICAO
+  type: int
+- name: DS_ELEICAO
+  type: str
+- name: DT_ELEICAO
+  type: date_dmy
+- name: TP_ABRANGENCIA
+  type: str
+- name: SG_UF
+  type: str
+- name: SG_UE
+  type: str
+- name: NM_UE
+  type: str
+- name: CD_MUNICIPIO
+  type: int
+- name: NM_MUNICIPIO
+  type: str
+- name: NR_ZONA
+  type: int
+- name: CD_CARGO
+  type: int
+- name: DS_CARGO
+  type: str
+- name: SQ_CANDIDATO
+  type: int
+- name: NR_CANDIDATO
+  type: int
+- name: NM_CANDIDATO
+  type: str
+- name: NM_URNA_CANDIDATO
+  type: str
+- name: NM_SOCIAL_CANDIDATO
+  type: str
+  special:
+  - '#NULO'
+- name: CD_SITUACAO_CANDIDATURA
+  type: int
+  special:
+  - '-3'
+- name: DS_SITUACAO_CANDIDATURA
+  type: str
+  special:
+  - '#NE'
+- name: CD_DETALHE_SITUACAO_CAND
+  type: int
+  special:
+  - '-3'
+- name: DS_DETALHE_SITUACAO_CAND
+  type: str
+  special:
+  - '#NE'
+- name: CD_SITUACAO_JULGAMENTO
+  type: int
+- name: DS_SITUACAO_JULGAMENTO
+  type: str
+- name: CD_SITUACAO_CASSACAO
+  type: int
+  special:
+  - '-1'
+- name: DS_SITUACAO_CASSACAO
+  type: str
+  special:
+  - '#NULO'
+- name: CD_SITUACAO_DCONST_DIPLOMA
+  type: int
+  special:
+  - '-1'
+- name: DS_SITUACAO_DCONST_DIPLOMA
+  type: str
+  special:
+  - '#NULO'
+- name: TP_AGREMIACAO
+  type: str
+- name: NR_PARTIDO
+  type: int
+- name: SG_PARTIDO
+  type: str
+- name: NM_PARTIDO
+  type: str
+- name: NR_FEDERACAO
+  type: int
+  special:
+  - '-1'
+- name: NM_FEDERACAO
+  type: str
+  special:
+  - '#NULO'
+- name: SG_FEDERACAO
+  type: str
+  special:
+  - '#NULO'
+- name: DS_COMPOSICAO_FEDERACAO
+  type: str
+  special:
+  - '#NULO'
+- name: SQ_COLIGACAO
+  type: int
+- name: NM_COLIGACAO
+  type: str
+- name: DS_COMPOSICAO_COLIGACAO
+  type: str
+- name: ST_VOTO_EM_TRANSITO
+  type: str
+- name: QT_VOTOS_NOMINAIS
+  type: int
+- name: NM_TIPO_DESTINACAO_VOTOS
+  type: str
+- name: QT_VOTOS_NOMINAIS_VALIDOS
+  type: int
+- name: CD_SIT_TOT_TURNO
+  type: int
+- name: DS_SIT_TOT_TURNO
+  type: str

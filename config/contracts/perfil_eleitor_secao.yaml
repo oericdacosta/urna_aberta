@@ -1,0 +1,85 @@
+contract_version: 1
+family: perfil_eleitor_secao
+ckan_dataset: eleitorado-2026
+zip:
+- https://cdn.tse.jus.br/estatistica/sead/odsele/perfil_eleitor_secao/perfil_eleitor_secao_2026_{UF}.zip
+member_pattern: perfil_eleitor_secao_2026_{UF}.csv
+format:
+  encoding: iso-8859-1
+  bom: false
+  delimiter: ;
+  quotechar: '"'
+  quoting: header e colunas de texto entre aspas; colunas numericas sem aspas
+  line_terminator: CRLF
+columns:
+- name: DT_GERACAO
+  type: date_dmy
+- name: HH_GERACAO
+  type: time
+- name: AA_ELEICAO
+  type: int
+- name: SG_UF
+  type: str
+- name: CD_MUNICIPIO
+  type: str
+  zero_padded: true
+- name: NM_MUNICIPIO
+  type: str
+- name: NR_ZONA
+  type: int
+- name: NR_SECAO
+  type: int
+- name: NR_LOCAL_VOTACAO
+  type: int
+- name: NM_LOCAL_VOTACAO
+  type: str
+- name: CD_GENERO
+  type: int
+- name: DS_GENERO
+  type: str
+- name: CD_ESTADO_CIVIL
+  type: int
+- name: DS_ESTADO_CIVIL
+  type: str
+- name: CD_FAIXA_ETARIA
+  type: int
+  special:
+  - '-3'
+- name: DS_FAIXA_ETARIA
+  type: str
+- name: CD_GRAU_ESCOLARIDADE
+  type: int
+- name: DS_GRAU_ESCOLARIDADE
+  type: str
+- name: CD_RACA_COR
+  type: int
+  special:
+  - '-1'
+- name: DS_RACA_COR
+  type: str
+- name: CD_IDENTIDADE_GENERO
+  type: int
+  special:
+  - '-1'
+- name: DS_IDENTIDADE_GENERO
+  type: str
+- name: CD_QUILOMBOLA
+  type: int
+  special:
+  - '-1'
+- name: DS_QUILOMBOLA
+  type: str
+- name: CD_INTERPRETE_LIBRAS
+  type: int
+  special:
+  - '-1'
+- name: DS_INTERPRETE_LIBRAS
+  type: str
+- name: QT_ELEITORES
+  type: int
+- name: QT_ELEITORES_BIOMETRIA
+  type: int
+- name: QT_ELEITORES_DEFICIENCIA
+  type: int
+- name: QT_ELEITORES_NOME_SOCIAL
+  type: int

@@ -1,0 +1,50 @@
+contract_version: 1
+family: transf_temporaria_secao
+ckan_dataset: eleitorado-2026
+zip:
+- https://cdn.tse.jus.br/estatistica/sead/odsele/perfil_eleitor_tte/transf_temporaria_secao_2026.zip
+member_pattern: transf_temporaria_secao_2026.csv
+format:
+  encoding: iso-8859-1
+  bom: false
+  delimiter: ;
+  quotechar: '"'
+  quoting: header e colunas de texto entre aspas; colunas numericas sem aspas
+  line_terminator: CRLF
+columns:
+- name: DT_GERACAO
+  type: date_dmy
+- name: HH_GERACAO
+  type: time
+- name: AA_ELEICAO
+  type: int
+- name: NR_TURNO
+  type: int
+- name: TP_TTE
+  type: str
+- name: TP_ABRANGENCIA_TTE
+  type: str
+- name: SG_UF_ORIGEM
+  type: str
+- name: CD_MUNICIPIO_ORIGEM
+  type: str
+  zero_padded: true
+- name: NM_MUNICIPIO_ORIGEM
+  type: str
+- name: NR_ZONA_ORIGEM
+  type: int
+- name: NR_SECAO_ORIGEM
+  type: int
+- name: SG_UF_DESTINO
+  type: str
+- name: CD_MUNICIPIO_DESTINO
+  type: str
+  zero_padded: true
+- name: NM_MUNICIPIO_DESTINO
+  type: str
+- name: NR_ZONA_DESTINO
+  type: int
+- name: NR_SECAO_DESTINO
+  type: int
+- name: QT_ELEITOR
+  type: int

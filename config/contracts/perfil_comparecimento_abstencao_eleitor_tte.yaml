@@ -1,0 +1,67 @@
+contract_version: 1
+family: perfil_comparecimento_abstencao_eleitor_tte
+ckan_dataset: comparecimento-e-abstencao-2026
+zip:
+- https://cdn.tse.jus.br/estatistica/sead/odsele/perfil_comparecimento_abstencao_eleitor_tte/perfil_comparecimento_abstencao_eleitor_tte_2026.zip
+member_pattern: perfil_comparecimento_abstencao_eleitor_tte_2026.csv
+format:
+  encoding: iso-8859-1
+  bom: false
+  delimiter: ;
+  quotechar: '"'
+  quoting: header e colunas de texto entre aspas; colunas numericas sem aspas
+  line_terminator: CRLF
+columns:
+- name: DT_GERACAO
+  type: date_dmy
+- name: HH_GERACAO
+  type: time
+- name: ANO_ELEICAO
+  type: int
+- name: NR_TURNO
+  type: int
+- name: SG_UF_ORIGEM
+  type: str
+- name: CD_MUNICIPIO_ORIGEM
+  type: str
+  zero_padded: true
+- name: NM_MUNICIPIO_ORIGEM
+  type: str
+- name: NR_ZONA_ORIGEM
+  type: int
+- name: SG_UF_DESTINO
+  type: str
+- name: CD_MUNICIPIO_DESTINO
+  type: int
+- name: NM_MUNICIPIO_DESTINO
+  type: str
+- name: NR_ZONA_DESTINO
+  type: int
+- name: CD_GENERO
+  type: int
+- name: DS_GENERO
+  type: str
+- name: CD_ESTADO_CIVIL
+  type: int
+- name: DS_ESTADO_CIVIL
+  type: str
+- name: CD_FAIXA_ETARIA
+  type: int
+- name: DS_FAIXA_ETARIA
+  type: str
+- name: CD_GRAU_INSTRUCAO
+  type: int
+- name: DS_GRAU_INSTRUCAO
+  type: str
+- name: CD_TIPO_TRANSFERENCIA
+  type: int
+- name: DS_TIPO_TRANSFERENCIA
+  type: str
+  special:
+  - '#NULO#'
+- name: QT_APTOS_EM_TTE
+  type: int
+- name: QT_COMPARECIMENTO_TTE
+  type: int
+- name: QT_ABSTENCAO_TTE
+  type: int

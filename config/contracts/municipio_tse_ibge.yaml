@@ -1,0 +1,35 @@
+contract_version: 1
+family: municipio_tse_ibge
+ckan_dataset: codigos-oficiais-de-uf-e-municipios-segundo-o-tse-e-o-ibge
+zip:
+- https://cdn.tse.jus.br/estatistica/sead/odsele/municipio_tse_ibge/municipio_tse_ibge.zip
+member_pattern: municipio_tse_ibge.csv
+format:
+  encoding: iso-8859-1
+  bom: false
+  delimiter: ;
+  quotechar: '"'
+  quoting: header e colunas de texto entre aspas; colunas numericas sem aspas
+  line_terminator: CRLF
+columns:
+- name: DT_GERACAO
+  type: date_dmy
+- name: HH_GERACAO
+  type: time
+- name: CD_UF_TSE
+  type: int
+- name: CD_UF_IBGE
+  type: int
+- name: SG_UF
+  type: str
+- name: NM_UF
+  type: str
+- name: CD_MUNICIPIO_TSE
+  type: str
+  zero_padded: true
+- name: NM_MUNICIPIO_TSE
+  type: str
+- name: CD_MUNICIPIO_IBGE
+  type: int
+- name: NM_MUNICIPIO_IBGE
+  type: str

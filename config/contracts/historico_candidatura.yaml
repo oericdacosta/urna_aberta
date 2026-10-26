@@ -1,0 +1,88 @@
+contract_version: 1
+family: historico_candidatura
+ckan_dataset: candidatos-2026
+zip:
+- https://cdn.tse.jus.br/estatistica/sead/odsele/historico_candidatura/historico_candidatura_2026.zip
+member_pattern: historico_candidatura_2026_{UF}.csv
+format:
+  encoding: iso-8859-1
+  bom: false
+  delimiter: ;
+  quotechar: '"'
+  quoting: header e colunas de texto entre aspas; colunas numericas sem aspas
+  line_terminator: CRLF
+columns:
+- name: DT_GERACAO
+  type: date_dmy
+- name: HH_GERACAO
+  type: time
+- name: ANO_ELEICAO_ATUAL
+  type: int
+- name: SQ_CANDIDATO_ATUAL
+  type: int
+- name: SG_UF_ATUAL
+  type: str
+- name: ANO_ELEICAO
+  type: int
+- name: CD_TIPO_ELEICAO
+  type: int
+- name: NM_TIPO_ELEICAO
+  type: str
+- name: NR_TURNO
+  type: int
+- name: CD_ELEICAO
+  type: int
+- name: DS_ELEICAO
+  type: str
+- name: DT_ELEICAO
+  type: str
+- name: TP_ABRANGENCIA_ELEICAO
+  type: str
+- name: SG_UF
+  type: str
+- name: SG_UE
+  type: str
+- name: NM_UE
+  type: str
+- name: CD_CARGO
+  type: int
+- name: DS_CARGO
+  type: str
+- name: SQ_CANDIDATO
+  type: int
+- name: NR_CANDIDATO
+  type: int
+- name: NM_CANDIDATO
+  type: str
+- name: NM_URNA_CANDIDATO
+  type: str
+- name: NR_PARTIDO
+  type: int
+- name: SG_PARTIDO
+  type: str
+- name: NM_PARTIDO
+  type: str
+- name: CD_SITUACAO_CANDIDATURA
+  type: int
+  special:
+  - '-3'
+- name: DS_SITUACAO_CANDIDATURA
+  type: str
+  special:
+  - '#NE'
+- name: CD_SITUACAO_JULGAMENTO
+  type: int
+  special:
+  - '-3'
+- name: DS_SITUACAO_JULGAMENTO
+  type: str
+  special:
+  - '#NE'
+- name: CD_SIT_TOT_TURNO
+  type: int
+  special:
+  - '-1'
+- name: DS_SIT_TOT_TURNO
+  type: str
+  special:
+  - '#NULO'

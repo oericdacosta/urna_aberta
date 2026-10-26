@@ -1,0 +1,181 @@
+contract_version: 1
+family: consulta_cand_complementar
+ckan_dataset: candidatos-2026
+zip:
+- https://cdn.tse.jus.br/estatistica/sead/odsele/consulta_cand_complementar/consulta_cand_complementar_2026.zip
+member_pattern: consulta_cand_complementar_2026_{UF}.csv
+format:
+  encoding: iso-8859-1
+  bom: false
+  delimiter: ;
+  quotechar: '"'
+  quoting: header e colunas de texto entre aspas; colunas numericas sem aspas
+  line_terminator: CRLF
+columns:
+- name: DT_GERACAO
+  type: date_dmy
+- name: HH_GERACAO
+  type: time
+- name: ANO_ELEICAO
+  type: int
+- name: CD_ELEICAO
+  type: int
+- name: SQ_CANDIDATO
+  type: int
+- name: CD_DETALHE_SITUACAO_CAND
+  type: int
+  special:
+  - '-3'
+- name: DS_DETALHE_SITUACAO_CAND
+  type: str
+  special:
+  - '#NE'
+- name: CD_NACIONALIDADE
+  type: int
+  special:
+  - '-4'
+- name: DS_NACIONALIDADE
+  type: str
+- name: CD_MUNICIPIO_NASCIMENTO
+  type: int
+  special:
+  - '-3'
+- name: NM_MUNICIPIO_NASCIMENTO
+  type: str
+- name: NR_IDADE_DATA_POSSE
+  type: int
+- name: ST_QUILOMBOLA
+  type: str
+- name: CD_ETNIA_INDIGENA
+  type: int
+  special:
+  - '-1'
+  - '-4'
+- name: DS_ETNIA_INDIGENA
+  type: str
+  special:
+  - '#NULO'
+- name: VR_DESPESA_MAX_CAMPANHA
+  type: decimal_point
+  special:
+  - '-1'
+  - '-4'
+- name: ST_REELEICAO
+  type: str
+  special:
+  - '#NE'
+- name: ST_DECLARAR_BENS
+  type: str
+- name: NR_PROTOCOLO_CANDIDATURA
+  type: int
+  special:
+  - '-1'
+- name: NR_PROCESSO
+  type: str
+  zero_padded: true
+- name: CD_SITUACAO_CANDIDATO_PLEITO
+  type: int
+  special:
+  - '-3'
+- name: DS_SITUACAO_CANDIDATO_PLEITO
+  type: str
+  special:
+  - '#NE'
+- name: CD_SITUACAO_CANDIDATO_URNA
+  type: int
+  special:
+  - '-3'
+- name: DS_SITUACAO_CANDIDATO_URNA
+  type: str
+  special:
+  - '#NE'
+- name: ST_CANDIDATO_INSERIDO_URNA
+  type: str
+- name: NM_TIPO_DESTINACAO_VOTOS
+  type: str
+  special:
+  - '#NULO'
+- name: CD_SITUACAO_CANDIDATO_TOT
+  type: int
+  special:
+  - '-1'
+- name: DS_SITUACAO_CANDIDATO_TOT
+  type: str
+  special:
+  - '#NULO'
+- name: ST_PREST_CONTAS
+  type: str
+- name: ST_SUBSTITUIDO
+  type: str
+- name: SQ_SUBSTITUIDO
+  type: int
+  special:
+  - '-1'
+- name: SQ_ORDEM_SUPLENCIA
+  type: int
+  special:
+  - '-1'
+- name: DT_ACEITE_CANDIDATURA
+  type: str
+- name: CD_SITUACAO_JULGAMENTO
+  type: int
+- name: DS_SITUACAO_JULGAMENTO
+  type: str
+- name: CD_SITUACAO_JULGAMENTO_PLEITO
+  type: int
+  special:
+  - '-1'
+- name: DS_SITUACAO_JULGAMENTO_PLEITO
+  type: str
+  special:
+  - '#NULO'
+- name: CD_SITUACAO_JULGAMENTO_URNA
+  type: int
+  special:
+  - '-1'
+- name: DS_SITUACAO_JULGAMENTO_URNA
+  type: str
+  special:
+  - '#NULO'
+- name: CD_SITUACAO_CASSACAO
+  type: int
+  special:
+  - '-1'
+- name: DS_SITUACAO_CASSACAO
+  type: str
+  special:
+  - '#NULO'
+- name: CD_SITUACAO_CASSACAO_MIDIA
+  type: int
+  special:
+  - '-1'
+- name: DS_SITUACAO_CASSACAO_MIDIA
+  type: str
+  special:
+  - '#NULO'
+- name: CD_SITUACAO_DIPLOMA
+  type: int
+  special:
+  - '-1'
+- name: DS_SITUACAO_DIPLOMA
+  type: str
+  special:
+  - '#NULO'
+- name: CD_GENERO_FEFC
+  type: int
+  special:
+  - '-1'
+  - '-4'
+- name: DS_GENERO_FEFC
+  type: str
+  special:
+  - '#NULO'
+- name: CD_COR_RACA_FEFC
+  type: int
+  special:
+  - '-1'
+  - '-4'
+- name: DS_COR_RACA_FEFC
+  type: str
+  special:
+  - '#NULO'
