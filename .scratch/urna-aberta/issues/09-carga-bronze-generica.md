@@ -11,3 +11,6 @@
 - [ ] Coluna ausente ou renomeada sem mapeamento põe o arquivo em quarentena e falha a carga
 - [ ] Coluna nova gera aviso e é preservada
 - [ ] Acentos íntegros num caso de teste (ex.: nomes com cedilha)
+- [ ] Carregar uma UF substitui só as linhas daquele arquivo (REPLACE WHERE por arquivo de origem), nunca recria a tabela inteira
+- [ ] Linha com `_rescued_data` não nulo (coluna que o `read_files` devolve) conta como rejeitada
+- [ ] Decisão registrada sobre nomes de coluna no bronze: o spike manteve os originais em maiúsculas

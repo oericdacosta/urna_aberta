@@ -12,3 +12,4 @@
 - [ ] Execuções simultâneas não se sobrepõem
 - [ ] Falha do workflow abre uma issue automaticamente
 - [ ] Há um mecanismo para o agendamento não ser desativado por inatividade
+- [ ] O job do maior arquivo (votação por seção de SP, 4,6 GiB de CSV) cabe no limite de 6 h do job e no disco do runner
