@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pytest
 
-from urna_aberta.bronze import ContractError, contract_para, load_zip
+from urna_aberta.bronze import ContractError, CountMismatch, contract_para, load_zip
 from urna_aberta.contracts import Contract, load_all
 from urna_aberta.manifest import ManifestEntry
 
@@ -76,6 +76,7 @@ class Ambiente:
         self.zip_local = zip_local
         self.enviados: dict[str, bytes] = {}
         self.consultas: list[tuple[str, dict[str, object] | None]] = []
+        self.n, self.rej = 1, 0  # o que o warehouse diz ter no bronze
         self.tabela = tabela  # colunas já existentes (None = será criada igual ao CSV)
 
     def fetch(self, vol: str, local: Path) -> None:
@@ -93,7 +94,7 @@ class Ambiente:
             cols = self.tabela if self.tabela is not None else [c.lower() for c in COLS]
             return [(c, "string", None) for c in [*cols, *sorted(META)]]
         if q.startswith("SELECT count"):
-            return [(3, 1)]
+            return [(self.n, self.rej)]
         return []
 
     def carregar(self, contract: Contract | None = None) -> list:  # type: ignore[type-arg]
@@ -206,8 +207,17 @@ def test_coluna_de_outro_layout_entra_nula(tmp_path: Path) -> None:
 
 
 def test_linhas_rejeitadas_sao_contadas(tmp_path: Path) -> None:
-    res = Ambiente(fazer_zip(tmp_path, membros_ok())).carregar()
-    assert (res[0].linhas, res[0].rejeitadas) == (3, 1)
+    amb = Ambiente(fazer_zip(tmp_path, membros_ok()))
+    amb.rej = 1
+    res = amb.carregar()
+    assert (res[0].linhas, res[0].rejeitadas) == (1, 1)
+
+
+def test_contagem_diferente_da_origem_falha_a_carga(tmp_path: Path) -> None:
+    amb = Ambiente(fazer_zip(tmp_path, membros_ok()))
+    amb.n = 2  # o bronze ficou com uma linha a mais que o CSV
+    with pytest.raises(CountMismatch, match="2 linhas no bronze, 1 no CSV"):
+        amb.carregar()
 
 
 def test_cabecalho_com_nome_perigoso_e_recusado(tmp_path: Path) -> None:

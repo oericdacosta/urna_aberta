@@ -14,6 +14,7 @@ class ManifestEntry:
     status: str  # novo | inalterado | republicado
     volume_path: str
     downloaded_at: str  # ISO-8601 UTC
+    bronze_sha256: str | None = None  # sha256 do ZIP já carregado no bronze
 
 
 class Manifest(Protocol):

@@ -95,9 +95,18 @@ def sync_file(
             status=status,
             volume_path=volume_path,
             downloaded_at=datetime.now(UTC).isoformat(timespec="seconds"),
+            bronze_sha256=anterior.bronze_sha256
+            if anterior and anterior.sha256 == sha
+            else None,
         )
     )
     return status
+
+
+def volume_path_for(url: str, catalogo: str, ano: int | str) -> str:
+    """ZIP no Volume: /Volumes/<catalogo>/landing/tse/<tema>/<ano>/<arquivo>."""
+    tema, arquivo = url.rsplit("/", 2)[-2:]
+    return f"/Volumes/{catalogo}/landing/tse/{tema}/{ano}/{arquivo}"
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -109,8 +118,7 @@ def main(argv: list[str] | None = None) -> int:
     args = p.parse_args(argv)
 
     catalogo = os.environ.get("DATABRICKS_CATALOG", "urna")
-    tema, arquivo = args.url.rsplit("/", 2)[-2:]
-    volume_path = f"/Volumes/{catalogo}/landing/tse/{tema}/{args.ano}/{arquivo}"
+    volume_path = volume_path_for(args.url, catalogo, args.ano)
     w = workspace()
     with httpx.Client(timeout=httpx.Timeout(30, read=120)) as client:
         with tempfile.TemporaryDirectory() as tmp:

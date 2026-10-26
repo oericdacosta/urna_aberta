@@ -1,10 +1,11 @@
 ano: 2026
 turnos: [1, 2]
 cargos: [presidente, governador, senador, deputado_federal, deputado_estadual, deputado_distrital]
-catalog: main
+catalog: urna
 datasets:
   - {id: resultados-2026, enabled: true}
   - {id: comparecimento-e-abstencao-2026, enabled: true}
-  - {id: candidatos-2026, enabled: true}
-  - {id: eleitorado-2026, enabled: true}
   - {id: codigos-oficiais-de-uf-e-municipios-segundo-o-tse-e-o-ibge, enabled: true}
+  # Desligados até terem tratamento de dados pessoais (CPF real em candidatos; perfil por eleitor).
+  - {id: candidatos-2026, enabled: false}
+  - {id: eleitorado-2026, enabled: false}

@@ -44,6 +44,10 @@ class ContractError(Exception):
     """Arquivo fora do contrato: ele vai para quarentena e a carga falha."""
 
 
+class CountMismatch(Exception):
+    """O bronze não tem as mesmas linhas do CSV de origem."""
+
+
 @dataclass(frozen=True)
 class LoadResult:
     arquivo: str
@@ -61,6 +65,14 @@ def read_header(path: Path, contract: Contract) -> list[str]:
     f = contract.format
     with path.open(encoding=f.encoding, newline="") as fh:
         return next(csv.reader(fh, delimiter=f.delimiter, quotechar=f.quotechar))
+
+
+def contar_registros(path: Path, contract: Contract) -> int:
+    """Linhas de dados do CSV (sem o cabeçalho), lidas com o parser do contrato."""
+    f = contract.format
+    with path.open(encoding=f.encoding, newline="") as fh:
+        n = sum(1 for _ in csv.reader(fh, delimiter=f.delimiter, quotechar=f.quotechar))
+    return max(n - 1, 0)
 
 
 def _raiz(volume_zip: str) -> tuple[str, str, str]:
@@ -152,6 +164,9 @@ def _carregar_csv(
         "WHERE _source_file = :arquivo",
         {"arquivo": membro},
     )[0]
+    esperado = contar_registros(local, contract)
+    if int(n) != esperado:  # type: ignore[call-overload]
+        raise CountMismatch(f"{membro}: {n} linhas no bronze, {esperado} no CSV")
     return LoadResult(membro, int(n), int(rej), tuple(novas))  # type: ignore[call-overload]
 
 

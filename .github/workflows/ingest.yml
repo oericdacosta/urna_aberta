@@ -1,0 +1,97 @@
+name: ingest
+
+on:
+  schedule:
+    - cron: "17 6 * * *" # todo dia, 03:17 em Brasília
+  workflow_dispatch:
+    inputs:
+      eleicao:
+        description: "Ano da eleição (config/elections/<ano>.yaml)"
+        required: true
+        default: "2026"
+      dataset:
+        description: "Só este dataset do CKAN (vazio = todos os habilitados)"
+        required: false
+        default: ""
+      forcar:
+        description: "Recarregar no bronze mesmo o que já está carregado"
+        type: boolean
+        default: false
+
+# Uma ingestão por vez: duas rodando juntas disputariam o mesmo manifesto.
+concurrency:
+  group: ingest
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+  DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+  # Entradas passam por variáveis de ambiente, nunca interpoladas no script.
+  ELEICAO: ${{ inputs.eleicao || '2026' }}
+  DATASET: ${{ inputs.dataset }}
+  FORCAR: ${{ inputs.forcar && 'sim' || '' }}
+
+jobs:
+  discover:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    outputs:
+      matrix: ${{ steps.d.outputs.matrix }}
+      count: ${{ steps.d.outputs.count }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+          python-version: "3.12"
+      - run: uv sync --frozen
+      - id: d
+        run: |
+          args=(--eleicao "$ELEICAO")
+          [ -n "$DATASET" ] && args+=(--dataset "$DATASET")
+          [ -n "$FORCAR" ] && args+=(--force)
+          uv run python -m urna_aberta.ingest discover "${args[@]}"
+
+  ingest:
+    needs: discover
+    if: needs.discover.outputs.count != '0'
+    name: ${{ matrix.arquivo }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360 # limite do GitHub para um job
+    strategy:
+      fail-fast: false # um arquivo com problema não derruba os outros
+      max-parallel: 3
+      matrix: ${{ fromJSON(needs.discover.outputs.matrix) }}
+    env:
+      ARQUIVO_URL: ${{ matrix.url }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+          python-version: "3.12"
+      - run: uv sync --frozen
+      - run: df -h / | tail -1 # disco livre antes (o maior CSV tem ~4,6 GiB)
+      - run: |
+          args=(--url "$ARQUIVO_URL" --eleicao "$ELEICAO")
+          [ -n "$FORCAR" ] && args+=(--force)
+          uv run python -m urna_aberta.ingest file "${args[@]}"
+
+  alerta:
+    needs: [discover, ingest]
+    if: failure()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      issues: write
+    steps:
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh issue create --repo "$GITHUB_REPOSITORY" \
+            --title "Falha na ingestão (execução $GITHUB_RUN_ID)" \
+            --body "A ingestão falhou. Veja os logs: $RUN_URL"

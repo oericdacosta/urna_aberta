@@ -9,7 +9,10 @@ from databricks.sdk import WorkspaceClient
 
 from urna_aberta.manifest import ManifestEntry
 
-COLUNAS = "url, size, etag, last_modified, sha256, status, volume_path, downloaded_at"
+COLUNAS = (
+    "url, size, etag, last_modified, sha256, status, volume_path, downloaded_at, "
+    "bronze_sha256"
+)
 
 
 def workspace() -> WorkspaceClient:
@@ -71,8 +74,13 @@ class DatabricksManifest:
             f"""CREATE TABLE IF NOT EXISTS {self.tabela} (
                 url STRING, size BIGINT, etag STRING, last_modified STRING,
                 sha256 STRING, status STRING, volume_path STRING,
-                downloaded_at STRING)"""
+                downloaded_at STRING, bronze_sha256 STRING)"""
         )
+        colunas = [str(r[0]) for r in self._executar(f"DESCRIBE TABLE {self.tabela}")]
+        if "bronze_sha256" not in colunas:  # tabela criada antes desta coluna
+            self._executar(
+                f"ALTER TABLE {self.tabela} ADD COLUMNS (bronze_sha256 STRING)"
+            )
 
     def get(self, url: str) -> ManifestEntry | None:
         linhas = self._executar(
@@ -83,10 +91,12 @@ class DatabricksManifest:
     def put(self, entry: ManifestEntry) -> None:
         self._executar(
             f"""MERGE INTO {self.tabela} t
-                USING (SELECT :url AS url, :size AS size, :etag AS etag,
-                       :last_modified AS last_modified, :sha256 AS sha256,
-                       :status AS status, :volume_path AS volume_path,
-                       :downloaded_at AS downloaded_at) s
+                USING (SELECT :url AS url, :size AS size,
+                       CAST(:etag AS STRING) AS etag,
+                       CAST(:last_modified AS STRING) AS last_modified,
+                       :sha256 AS sha256, :status AS status,
+                       :volume_path AS volume_path, :downloaded_at AS downloaded_at,
+                       CAST(:bronze_sha256 AS STRING) AS bronze_sha256) s
                 ON t.url = s.url
                 WHEN MATCHED THEN UPDATE SET *
                 WHEN NOT MATCHED THEN INSERT *""",
