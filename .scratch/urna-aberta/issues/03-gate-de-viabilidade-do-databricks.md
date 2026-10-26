@@ -8,16 +8,16 @@
 
 **Status:** ready-for-agent
 
-- [ ] Documento de viabilidade registra: PAT permitido?, service principal existe?, dá para criar catálogo?, Volumes disponíveis?, cota diária e limite de armazenamento
+- [x] Documento de viabilidade registra: PAT permitido?, service principal existe?, dá para criar catálogo?, Volumes disponíveis?, cota diária e limite de armazenamento
 - [ ] Registra se o runner do Actions consegue conectar ao SQL warehouse
-- [ ] Registra se o Databricks alcança `cdn.tse.jus.br` (egress), mesmo que o desenho não dependa disso
+- [x] Registra se o Databricks alcança `cdn.tse.jus.br` (egress), mesmo que o desenho não dependa disso
 - [ ] Workflow manual baixa um ZIP pequeno, sobe ao Volume e uma consulta SQL lê as linhas
-- [ ] Decisões que mudam o desenho (ex.: sem catálogo próprio) ficam registradas no documento de viabilidade
+- [x] Decisões que mudam o desenho (ex.: sem catálogo próprio) ficam registradas no documento de viabilidade
 
 ## Estado (2026-10-26)
 
-Nenhum critério marcado: todos dependem de um workspace Free Edition, que não está disponível (sem `DATABRICKS_*` no ambiente; o `~/.databrickscfg` só tem perfis OAuth interativos, que não foram usados para não escrever em workspaces do usuário).
+Executado com o token pessoal do usuário contra o workspace Free Edition (catálogo `urna`, criado pela interface). Resultados completos em `docs/viabilidade.md`.
 
-Entregue: `scripts/viabilidade.py`, `.github/workflows/viabilidade.yml` e `docs/viabilidade.md`. Verificado localmente: CKAN, HEAD e download do menor ZIP (2.511.067 bytes, confere com `content-length`), ruff e mypy strict no script. Verificado na doc: cota existe mas sem valor numérico, egress restrito a domínios confiáveis, warehouse único 2X-Small. A doc não menciona PAT, service principal, catálogo próprio nem limite de armazenamento.
+Marcados: PAT, service principal, catálogo (só pela interface), Volumes e egress. Os valores numéricos da cota diária e do armazenamento não são publicados pela doc; ficou registrado que precisam ser observados em cargas maiores.
 
-Falta (usuário): passos manuais da seção 5 de `docs/viabilidade.md`, depois disparar o workflow e registrar os resultados no documento.
+Em aberto: o teste a partir do runner do GitHub (precisa de push e de disparar o workflow `viabilidade`). Enquanto isso não for feito, o ticket não está concluído.

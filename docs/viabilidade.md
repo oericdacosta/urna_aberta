@@ -4,9 +4,10 @@ Data de elaboração: 2026-10-26. Legenda de status:
 
 - **verificado na doc**: lido na documentação oficial na data indicada.
 - **verificado localmente**: executado nesta máquina, sem workspace.
-- **PENDENTE (requer workspace)**: só se resolve com um workspace Free Edition e o workflow `viabilidade`.
+- **verificado no workspace**: executado em 2026-10-26 contra o workspace Free Edition do projeto, com token pessoal (script local).
+- **PENDENTE**: ainda não executado.
 
-Nada marcado como verificado depende de credenciais. Nenhum resultado de workspace foi inventado.
+Os itens "verificado no workspace" vêm do log real do script; os PENDENTE ainda não foram executados.
 
 ## 1. Caminho do dado
 
@@ -64,22 +65,22 @@ não é prova de suporte. Isso exige teste no workspace (seção 4).
 Como o egress é restrito a "trusted domains", o download do TSE permanece no runner do Actions e o
 Databricks só recebe o arquivo pelo Volume. Isso vale mesmo que o teste de egress passe (item 4.3).
 
-## 4. PENDENTE (requer workspace)
+## 4. Resultados no workspace
 
-| Pergunta | Como o script/workflow responde | Status |
+| Pergunta | Resultado | Status |
 |---|---|---|
-| 4.1 PAT permitido? | Sonda "usuario (PAT valido)" (`current_user.me`) | PENDENTE (requer workspace) |
-| 4.1 Service principal existe/pode ser criado? | Sonda "service principals" (lista). Criar um SP exige admin de workspace; pode ser testado também em Settings > Identity and access | PENDENTE (requer workspace) |
-| 4.2 Dá para criar catálogo próprio? | Sonda "criar catalogo proprio" (cria e apaga `urna_viabilidade`); lista os catálogos visíveis | PENDENTE (requer workspace) |
-| 4.2 Volumes disponíveis? | Sondas "criar schema", "criar volume", "upload zip/csv", "listar volume" | PENDENTE (requer workspace) |
-| 4.3 Runner conecta ao SQL warehouse? | Sonda "SQL warehouse le o Volume" (`databricks-sql-connector` do runner) | PENDENTE (requer workspace) |
-| 4.4 Databricks alcança `cdn.tse.jus.br`? | Não dá para testar por SQL. Rodar em um notebook serverless: `import urllib.request; print(urllib.request.urlopen(urllib.request.Request("https://cdn.tse.jus.br/estatistica/sead/odsele/detalhe_votacao_munzona/detalhe_votacao_munzona_2026.zip", method="HEAD"), timeout=30).status)` e registrar status ou erro | PENDENTE (requer workspace) |
-| 4.5 Valor da cota diária e limite de armazenamento | Não publicados na doc; observar na UI do workspace e após cargas maiores | PENDENTE (requer workspace) |
-| 4.6 Workflow ponta a ponta (ZIP -> Volume -> SELECT conta linhas) | Disparar `viabilidade` e anexar o log | PENDENTE (requer workspace) |
+| 4.1 PAT permitido? | Sim. `current_user.me` retornou o usuário com o token pessoal (Settings > Developer > Access tokens). | verificado no workspace |
+| 4.1 Service principal | Nenhum existe (lista vazia). Criar um não foi testado. Sem console de conta, o OIDC do GitHub não é opção: o PAT é o caminho. | verificado no workspace (criação: não testada) |
+| 4.2 Catálogo próprio | **Por API/SQL: FALHA.** `InvalidState: Metastore storage root URL does not exist. Default Storage is enabled in your account. You can use the UI to create a new catalog using Default Storage`. **Pela interface** (Catalog > Create catalog, Default Storage): funcionou, e o catálogo `urna` passou a aparecer na lista. O catálogo padrão `workspace` não existe neste workspace; existem `analytics`, `raw` e os de sistema. | verificado no workspace |
+| 4.2 Volumes | Criar o schema `urna.viabilidade` e o Volume gerenciado `raw`: OK. Upload do ZIP (2,5 MB) e do CSV pela Files API: OK. Listagem do Volume: OK. | verificado no workspace |
+| 4.3 Cliente externo conecta ao SQL warehouse | O `databricks-sql-connector`, rodando fora do Databricks (esta máquina), leu o CSV do Volume: 92 linhas, igual às 92 do CSV de origem (conferido separadamente). Falta repetir no runner do GitHub. | verificado no workspace (runner do GitHub: PENDENTE) |
+| 4.4 Databricks alcança `cdn.tse.jus.br`? | Sim: HEAD retornou 200, executado num notebook serverless. | verificado no workspace |
+| 4.5 Valor da cota diária e limite de armazenamento | Não publicados na doc e ainda não observados. Observar na UI e após cargas maiores. | PENDENTE |
+| 4.6 Workflow no GitHub (ZIP -> Volume -> SELECT conta linhas) | Os secrets já estão cadastrados; falta o push e disparar `viabilidade`. | PENDENTE |
 
-O catálogo e o schema padrão assumidos pelo script são `workspace` e `viabilidade`; sobrescrevíveis por
-`DATABRICKS_CATALOG`, `DATABRICKS_SCHEMA`, `DATABRICKS_VOLUME` e `DATABRICKS_WAREHOUSE_ID`
-(variáveis de ambiente; no workflow, acrescentar em `env:` se o padrão não servir).
+O script reporta FALHA na sonda "criar catalogo proprio": é o resultado esperado e documentado acima, não um defeito.
+O catálogo, schema e Volume padrão do script são `urna`, `viabilidade` e `raw`, sobrescrevíveis por
+`DATABRICKS_CATALOG`, `DATABRICKS_SCHEMA`, `DATABRICKS_VOLUME` e `DATABRICKS_WAREHOUSE_ID`.
 
 ## 5. Passos manuais para o usuário
 
@@ -105,5 +106,10 @@ Registradas apenas as já sustentadas por evidência:
 - Guardar o ZIP bruto e consultar o CSV extraído; o SQL não lê ZIP (seção 2).
 - Cargas fatiadas por arquivo e retomáveis, por causa da cota diária e do warehouse 2X-Small (3.1).
 
-A preencher após o teste: catálogo próprio ou schema por ambiente no catálogo padrão; PAT ou alternativa;
-service principal ou PAT de usuário.
+Decididas após os testes no workspace:
+
+- Catálogo próprio `urna`, criado pela interface com Default Storage (a API recusa). Os schemas por camada vivem dentro dele.
+- Autenticação por PAT de usuário. Não há service principal nem OIDC.
+- O Databricks alcança o CDN (200), mas o download continua no runner: a lista de domínios confiáveis não é publicada e não vale depender dela.
+
+Ainda em aberto: valor da cota diária e limite de armazenamento (4.5) e o teste a partir do runner do GitHub (4.3 e 4.6).

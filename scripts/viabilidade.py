@@ -24,6 +24,7 @@ from collections.abc import Callable
 import httpx
 from databricks import sql
 from databricks.sdk import WorkspaceClient
+from databricks.sdk.service.catalog import VolumeType
 
 URL = (
     "https://cdn.tse.jus.br/estatistica/sead/odsele/"
@@ -48,7 +49,7 @@ def sonda(nome: str, fn: Callable[[], object]) -> object | None:
 def main() -> int:
     host = os.environ["DATABRICKS_HOST"].rstrip("/")
     token = os.environ["DATABRICKS_TOKEN"]
-    cat = os.environ.get("DATABRICKS_CATALOG", "workspace")
+    cat = os.environ.get("DATABRICKS_CATALOG", "urna")
     sch = os.environ.get("DATABRICKS_SCHEMA", "viabilidade")
     vol = os.environ.get("DATABRICKS_VOLUME", "raw")
 
@@ -71,7 +72,7 @@ def main() -> int:
 
     # 2. Capacidades do workspace
     w = WorkspaceClient(host=host, token=token)
-    sonda("usuario (PAT valido)", lambda: w.current_user.me().user_name)
+    sonda("usuario (PAT valido)", lambda: bool(w.current_user.me().user_name))
     sonda("catalogos visiveis", lambda: [c.name for c in w.catalogs.list()])
     sonda(
         "criar catalogo proprio 'urna'",
@@ -93,7 +94,7 @@ def main() -> int:
                 catalog_name=cat,
                 schema_name=sch,
                 name=vol,
-                volume_type="MANAGED",  # type: ignore[arg-type]
+                volume_type=VolumeType.MANAGED,
             ).full_name
         ),
     )
