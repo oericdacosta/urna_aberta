@@ -4,10 +4,23 @@ version = "0.1.0"
 description = "ELT de dados abertos eleitorais do TSE para o Databricks"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "httpx>=0.28.1",
+    "pydantic>=2.14.1",
+    "pyyaml>=6.0.3",
+    "tenacity>=9.2.1",
+]
 
 [dependency-groups]
-dev = ["pytest", "ruff", "mypy", "pre-commit", "detect-secrets"]
+dev = [
+    "pytest",
+    "ruff",
+    "mypy",
+    "pre-commit",
+    "detect-secrets",
+    "respx>=0.23.1",
+    "types-pyyaml>=6.0.12.20260906",
+]
 
 [build-system]
 requires = ["hatchling"]

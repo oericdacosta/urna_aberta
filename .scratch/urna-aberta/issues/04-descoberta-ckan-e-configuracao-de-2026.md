@@ -6,7 +6,7 @@
 
 **Status:** ready-for-agent
 
-- [ ] Um YAML de 2026 lista os datasets (resultados, comparecimento, candidatos, eleitorado, de-para TSE↔IBGE) com `id` CKAN explícito e flag de habilitado
-- [ ] Validação rejeita campos desconhecidos
-- [ ] A CLI gera um inventário de fontes com URL, tamanho e data de modificação de cada arquivo
-- [ ] Testes unitários com respostas do CKAN simuladas cobrem recurso ausente e erro 5xx com retry
+- [x] Um YAML de 2026 lista os datasets (resultados, comparecimento, candidatos, eleitorado, de-para TSE↔IBGE) com `id` CKAN explícito e flag de habilitado
+- [x] Validação rejeita campos desconhecidos
+- [x] A CLI gera um inventário de fontes com URL, tamanho e data de modificação de cada arquivo
+- [x] Testes unitários com respostas do CKAN simuladas cobrem recurso ausente e erro 5xx com retry
