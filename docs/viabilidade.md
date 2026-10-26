@@ -73,12 +73,12 @@ Databricks só recebe o arquivo pelo Volume. Isso vale mesmo que o teste de egre
 | 4.1 Service principal | Nenhum existe (lista vazia). Criar um não foi testado. Sem console de conta, o OIDC do GitHub não é opção: o PAT é o caminho. | verificado no workspace (criação: não testada) |
 | 4.2 Catálogo próprio | **Por API/SQL: FALHA.** `InvalidState: Metastore storage root URL does not exist. Default Storage is enabled in your account. You can use the UI to create a new catalog using Default Storage`. **Pela interface** (Catalog > Create catalog, Default Storage): funcionou, e o catálogo `urna` passou a aparecer na lista. O catálogo padrão `workspace` não existe neste workspace; existem `analytics`, `raw` e os de sistema. | verificado no workspace |
 | 4.2 Volumes | Criar o schema `urna.viabilidade` e o Volume gerenciado `raw`: OK. Upload do ZIP (2,5 MB) e do CSV pela Files API: OK. Listagem do Volume: OK. | verificado no workspace |
-| 4.3 Cliente externo conecta ao SQL warehouse | O `databricks-sql-connector`, rodando fora do Databricks (esta máquina), leu o CSV do Volume: 92 linhas, igual às 92 do CSV de origem (conferido separadamente). Falta repetir no runner do GitHub. | verificado no workspace (runner do GitHub: PENDENTE) |
+| 4.3 Runner conecta ao SQL warehouse | O `databricks-sql-connector` leu o CSV do Volume em duas origens: nesta máquina e no runner do GitHub Actions (log do workflow `viabilidade`). Nas duas: 92 linhas, igual às 92 do CSV de origem (conferido separadamente). | verificado no workspace |
 | 4.4 Databricks alcança `cdn.tse.jus.br`? | Sim: HEAD retornou 200, executado num notebook serverless. | verificado no workspace |
 | 4.5 Valor da cota diária e limite de armazenamento | Não publicados na doc e ainda não observados. Observar na UI e após cargas maiores. | PENDENTE |
-| 4.6 Workflow no GitHub (ZIP -> Volume -> SELECT conta linhas) | Os secrets já estão cadastrados; falta o push e disparar `viabilidade`. | PENDENTE |
+| 4.6 Workflow no GitHub (ZIP -> Volume -> SELECT conta linhas) | Rodou no runner: download do CDN, upload ao Volume, listagem e `SELECT` com 92 linhas. Na primeira execução com o schema e o Volume já existentes, as sondas de criação falhavam por "already exists"; o script agora trata isso como OK. | verificado no workspace |
 
-O script reporta FALHA na sonda "criar catalogo proprio": é o resultado esperado e documentado acima, não um defeito.
+A sonda de criar catálogo por API é informativa (aparece como INFO e não derruba o script): o resultado esperado é o erro documentado acima.
 O catálogo, schema e Volume padrão do script são `urna`, `viabilidade` e `raw`, sobrescrevíveis por
 `DATABRICKS_CATALOG`, `DATABRICKS_SCHEMA`, `DATABRICKS_VOLUME` e `DATABRICKS_WAREHOUSE_ID`.
 
@@ -112,4 +112,4 @@ Decididas após os testes no workspace:
 - Autenticação por PAT de usuário. Não há service principal nem OIDC.
 - O Databricks alcança o CDN (200), mas o download continua no runner: a lista de domínios confiáveis não é publicada e não vale depender dela.
 
-Ainda em aberto: valor da cota diária e limite de armazenamento (4.5) e o teste a partir do runner do GitHub (4.3 e 4.6).
+Ainda em aberto: valor da cota diária e limite de armazenamento (4.5), que a doc não publica.

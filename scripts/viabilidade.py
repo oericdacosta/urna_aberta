@@ -34,16 +34,30 @@ MEMBRO = "detalhe_votacao_munzona_2026_AC.csv"  # menor UF dentro do ZIP
 falhas: list[str] = []
 
 
-def sonda(nome: str, fn: Callable[[], object]) -> object | None:
+def sonda(
+    nome: str, fn: Callable[[], object], obrigatoria: bool = True
+) -> object | None:
     try:
         r = fn()
     except Exception as e:  # noqa: BLE001 - o objetivo é registrar qualquer falha
         msg = str(e).replace(os.environ["DATABRICKS_TOKEN"], "***")
-        print(f"FALHA {nome}: {type(e).__name__}: {msg[:300]}")
-        falhas.append(nome)
+        rotulo = "FALHA" if obrigatoria else "INFO "
+        print(f"{rotulo} {nome}: {type(e).__name__}: {msg[:300]}")
+        if obrigatoria:
+            falhas.append(nome)
         return None
     print(f"OK    {nome}: {r}")
     return r
+
+
+def idempotente(fn: Callable[[], object]) -> object:
+    """Roda a criação; se o recurso já existe (execução anterior), não é falha."""
+    try:
+        return fn()
+    except Exception as e:  # noqa: BLE001
+        if "already exists" in str(e):
+            return "ja existia"
+        raise
 
 
 def main() -> int:
@@ -75,27 +89,33 @@ def main() -> int:
     sonda("usuario (PAT valido)", lambda: bool(w.current_user.me().user_name))
     sonda("catalogos visiveis", lambda: [c.name for c in w.catalogs.list()])
     sonda(
-        "criar catalogo proprio 'urna'",
+        "criar catalogo por API (a Free Edition exige a interface)",
         lambda: (
             (
                 w.catalogs.create(name="urna_viabilidade"),
                 w.catalogs.delete("urna_viabilidade", force=True),
             )[0].name
         ),  # noqa: E501
+        obrigatoria=False,
     )
     sonda("service principals", lambda: len(list(w.service_principals.list())))
     sonda(
-        "criar schema", lambda: w.schemas.create(name=sch, catalog_name=cat).full_name
+        "criar schema",
+        lambda: idempotente(
+            lambda: w.schemas.create(name=sch, catalog_name=cat).full_name
+        ),
     )
     sonda(
         "criar volume",
-        lambda: (
-            w.volumes.create(
-                catalog_name=cat,
-                schema_name=sch,
-                name=vol,
-                volume_type=VolumeType.MANAGED,
-            ).full_name
+        lambda: idempotente(
+            lambda: (
+                w.volumes.create(
+                    catalog_name=cat,
+                    schema_name=sch,
+                    name=vol,
+                    volume_type=VolumeType.MANAGED,
+                ).full_name
+            )
         ),
     )
 

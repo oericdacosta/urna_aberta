@@ -9,15 +9,11 @@
 **Status:** ready-for-agent
 
 - [x] Documento de viabilidade registra: PAT permitido?, service principal existe?, dá para criar catálogo?, Volumes disponíveis?, cota diária e limite de armazenamento
-- [ ] Registra se o runner do Actions consegue conectar ao SQL warehouse
+- [x] Registra se o runner do Actions consegue conectar ao SQL warehouse
 - [x] Registra se o Databricks alcança `cdn.tse.jus.br` (egress), mesmo que o desenho não dependa disso
-- [ ] Workflow manual baixa um ZIP pequeno, sobe ao Volume e uma consulta SQL lê as linhas
+- [x] Workflow manual baixa um ZIP pequeno, sobe ao Volume e uma consulta SQL lê as linhas
 - [x] Decisões que mudam o desenho (ex.: sem catálogo próprio) ficam registradas no documento de viabilidade
 
 ## Estado (2026-10-26)
 
-Executado com o token pessoal do usuário contra o workspace Free Edition (catálogo `urna`, criado pela interface). Resultados completos em `docs/viabilidade.md`.
-
-Marcados: PAT, service principal, catálogo (só pela interface), Volumes e egress. Os valores numéricos da cota diária e do armazenamento não são publicados pela doc; ficou registrado que precisam ser observados em cargas maiores.
-
-Em aberto: o teste a partir do runner do GitHub (precisa de push e de disparar o workflow `viabilidade`). Enquanto isso não for feito, o ticket não está concluído.
+Concluído, exceto os valores numéricos de cota diária e armazenamento, que a doc não publica e ainda não foram observados (registrado em `docs/viabilidade.md`, item 4.5). Executado com token pessoal contra o Free Edition (catálogo `urna`, criado pela interface), localmente e no runner do GitHub Actions: download, upload ao Volume, listagem e leitura de 92 linhas por SQL.
