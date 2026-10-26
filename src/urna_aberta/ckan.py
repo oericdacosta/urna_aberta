@@ -39,7 +39,7 @@ def _transient(exc: BaseException) -> bool:
     return isinstance(exc, httpx.TransportError)
 
 
-def _retrying(wait: wait_base | None) -> Retrying:
+def retrying(wait: wait_base | None) -> Retrying:
     return Retrying(
         retry=retry_if_exception(_transient),
         stop=stop_after_attempt(4),
@@ -59,7 +59,7 @@ def package_resources(
             resp.raise_for_status()
         return resp
 
-    resp = _retrying(wait)(get)
+    resp = retrying(wait)(get)
     body = (
         resp.json()
         if resp.headers.get("content-type", "").startswith("application/json")
@@ -87,7 +87,7 @@ def head(client: httpx.Client, url: str, wait: wait_base | None = None) -> HeadI
         resp.raise_for_status()
         return resp
 
-    h = _retrying(wait)(go).headers
+    h = retrying(wait)(go).headers
     length = h.get("content-length")
     return HeadInfo(
         size=int(length) if length else None,

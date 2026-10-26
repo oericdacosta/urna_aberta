@@ -5,6 +5,8 @@ description = "ELT de dados abertos eleitorais do TSE para o Databricks"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "databricks-sdk>=0.157.0",
+    "databricks-sql-connector>=4.8.0",
     "httpx>=0.28.1",
     "pydantic>=2.14.1",
     "pyyaml>=6.0.3",
