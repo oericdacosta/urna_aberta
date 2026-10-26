@@ -1,6 +1,7 @@
 """Acesso ao Databricks: upload ao Volume e o manifesto em tabela Delta."""
 
 import os
+import shutil
 from pathlib import Path
 
 from databricks import sql
@@ -25,10 +26,21 @@ def upload_to_volume(w: WorkspaceClient, local: Path, volume_path: str) -> None:
         w.files.upload(volume_path, f, overwrite=True)
 
 
-class DatabricksManifest:
-    """Manifesto na tabela `<catalogo>.ops.ingest_manifest`."""
+def download_from_volume(w: WorkspaceClient, volume_path: str, local: Path) -> None:
+    """Baixa um arquivo do Volume para o disco em streaming."""
+    contents = w.files.download(volume_path).contents
+    assert contents is not None
+    try:
+        with local.open("wb") as f:
+            shutil.copyfileobj(contents, f, 1 << 20)
+    finally:
+        contents.close()
 
-    def __init__(self, catalogo: str = "urna") -> None:
+
+class Sql:
+    """Executa SQL no warehouse (uma conexão por chamada)."""
+
+    def __init__(self) -> None:
         host = os.environ["DATABRICKS_HOST"].rstrip("/")
         wid = (
             os.environ.get("DATABRICKS_WAREHOUSE_ID")
@@ -39,6 +51,20 @@ class DatabricksManifest:
             "http_path": f"/sql/1.0/warehouses/{wid}",
             "access_token": os.environ["DATABRICKS_TOKEN"],
         }
+
+    def __call__(
+        self, query: str, params: dict[str, object] | None = None
+    ) -> list[tuple[object, ...]]:
+        with sql.connect(**self._conn) as c, c.cursor() as cur:
+            cur.execute(query, params)
+            return [tuple(r) for r in cur.fetchall()] if cur.description else []
+
+
+class DatabricksManifest:
+    """Manifesto na tabela `<catalogo>.ops.ingest_manifest`."""
+
+    def __init__(self, catalogo: str = "urna", executar: Sql | None = None) -> None:
+        self._executar = executar or Sql()
         self.tabela = f"{catalogo}.ops.ingest_manifest"
         self._executar(f"CREATE SCHEMA IF NOT EXISTS {catalogo}.ops")
         self._executar(
@@ -47,13 +73,6 @@ class DatabricksManifest:
                 sha256 STRING, status STRING, volume_path STRING,
                 downloaded_at STRING)"""
         )
-
-    def _executar(
-        self, query: str, params: dict[str, object] | None = None
-    ) -> list[tuple[object, ...]]:
-        with sql.connect(**self._conn) as c, c.cursor() as cur:
-            cur.execute(query, params)
-            return [tuple(r) for r in cur.fetchall()] if cur.description else []
 
     def get(self, url: str) -> ManifestEntry | None:
         linhas = self._executar(

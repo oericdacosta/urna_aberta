@@ -57,6 +57,14 @@ class Contract(_Strict):
             raise ValueError(f"colunas duplicadas: {sorted(dups)}")
         return cols
 
+    def diff_header(self, header: list[str]) -> tuple[list[str], list[str]]:
+        """Devolve (ausentes, novas) do cabeçalho lido em relação ao contrato."""
+        expected = [c.name for c in self.columns]
+        return (
+            [c for c in expected if c not in header],
+            [c for c in header if c not in expected],
+        )
+
     def check_header(self, header: list[str]) -> None:
         """Levanta ValueError se o cabeçalho lido difere do contrato."""
         expected = [c.name for c in self.columns]

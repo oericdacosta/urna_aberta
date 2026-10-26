@@ -6,11 +6,17 @@
 
 **Status:** ready-for-agent
 
-- [ ] Todas as colunas entram como texto, com metadados de origem, hash, data de ingestão e encoding
-- [ ] Reprocessar o mesmo arquivo mantém a contagem de linhas
-- [ ] Coluna ausente ou renomeada sem mapeamento põe o arquivo em quarentena e falha a carga
-- [ ] Coluna nova gera aviso e é preservada
-- [ ] Acentos íntegros num caso de teste (ex.: nomes com cedilha)
-- [ ] Carregar uma UF substitui só as linhas daquele arquivo (REPLACE WHERE por arquivo de origem), nunca recria a tabela inteira
-- [ ] Linha com `_rescued_data` não nulo (coluna que o `read_files` devolve) conta como rejeitada
-- [ ] Decisão registrada sobre nomes de coluna no bronze: o spike manteve os originais em maiúsculas
+- [x] Todas as colunas entram como texto, com metadados de origem, hash, data de ingestão e encoding
+- [x] Reprocessar o mesmo arquivo mantém a contagem de linhas
+- [x] Coluna ausente ou renomeada sem mapeamento põe o arquivo em quarentena e falha a carga
+- [x] Coluna nova gera aviso e é preservada
+- [x] Acentos íntegros num caso de teste (ex.: nomes com cedilha)
+- [x] Carregar uma UF substitui só as linhas daquele arquivo (REPLACE WHERE por arquivo de origem), nunca recria a tabela inteira
+- [x] Linha com `_rescued_data` não nulo (coluna que o `read_files` devolve) conta como rejeitada
+- [x] Decisão registrada sobre nomes de coluna no bronze: o spike manteve os originais em maiúsculas
+
+## Estado (2026-10-26)
+
+Concluído e documentado em `docs/bronze.md`. Verificado: 30 testes offline (incluindo quarentena, coluna nova, `REPLACE WHERE`, acentos, nome de coluna perigoso), quebra deliberada do código em 4 pontos (todas pegas), e carga real no Databricks: Acre (241.907 linhas, soma de votos igual ao CSV) e o ZIP de detalhe da apuração (30.716 linhas em 28 arquivos, `BRASIL` pulado, recarga idêntica).
+
+Limites: só 2 famílias rodaram no Databricks; a quarentena só foi exercitada offline; nenhum arquivo grande passou pela carga (SP, 4,6 GiB).
