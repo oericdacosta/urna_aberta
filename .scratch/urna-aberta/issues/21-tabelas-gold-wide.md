@@ -1,6 +1,6 @@
 # 21: Tabelas gold wide
 
-**What to build:** Duas tabelas prontas para consulta direta, estáveis e documentadas, pensadas para análise e para futura IA: resultado por candidato e município, e perfil do candidato.
+**What to build:** Duas tabelas prontas para consulta direta, estáveis e documentadas: resultado por candidato e município, e perfil do candidato.
 
 **Blocked by:** 13 (Fatos de votação e comparecimento), 19 (Candidatos 2026)
 

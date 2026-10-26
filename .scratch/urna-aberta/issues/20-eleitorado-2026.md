@@ -8,4 +8,3 @@
 
 - [ ] Os 39 registros duplicados entre seções transferidas e originais são tratados e o total fecha em 158.745.463
 - [ ] Fato de eleitorado com grão documentado e teste de unicidade
-- [ ] Células pequenas identificadas para a etapa de supressão

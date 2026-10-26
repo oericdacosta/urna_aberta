@@ -4,7 +4,7 @@
 
 **Blocked by:** 21 (Tabelas gold wide)
 
-**Status:** ready-for-agent
+**Status:** deferred (fora do escopo atual: o foco é o ELT; resumos e métricas são camada de análise)
 
 - [ ] Cada métrica é definida em um único lugar
 - [ ] Testes comparam métricas com valores conhecidos do 1º turno
