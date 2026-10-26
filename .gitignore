@@ -4,6 +4,7 @@ PLANO.md
 # segredos e ambiente
 .env
 .env.*
+!.env.example
 *.pem
 profiles.yml
 !profiles.yml.example
