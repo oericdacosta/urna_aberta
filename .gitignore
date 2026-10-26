@@ -1,0 +1,28 @@
+# plano local, não versionado
+PLANO.md
+
+# segredos e ambiente
+.env
+.env.*
+*.pem
+profiles.yml
+!profiles.yml.example
+
+# python
+.venv/
+__pycache__/
+*.pyc
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+dist/
+*.egg-info/
+
+# dbt
+dbt/target/
+dbt/dbt_packages/
+dbt/logs/
+
+# dados baixados do TSE
+data/
+*.zip
